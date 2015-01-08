@@ -533,7 +533,7 @@ respective sections above.
 License and Authors
 ===================
 
-* Author:: NagaLakshmi<nagalakshmi.n@cusdelight.com>
+* Author:: NagaLakshmi <nagalakshmi.n@cusdelight.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
