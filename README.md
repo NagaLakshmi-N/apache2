@@ -28,9 +28,7 @@ Requirements
 
 As of v1.2.0, this cookbook makes use of `node['platform_family']` to
 simplify platform selection logic. This attribute was introduced in
-Ohai v0.6.12. The recipe methods were introduced in Chef v0.10.10. If
-you must run an older version of Chef or Ohai, use [version 1.1.16 of
-this cookbook](http://community.opscode.com/cookbooks/apache2/versions/1_1_16/downloads).
+Ohai v0.6.12. The recipe methods were introduced in Chef v0.10.10.
 
 ## Cookbooks:
 
@@ -48,10 +46,9 @@ settings may affect the behavior of this cookbook:
 * Compile tools
 * 3rd party repositories
 
-On Ubuntu/Debian, use Opscode's `apt` cookbook to ensure the package
+On Ubuntu/Debian, use `apt` cookbook to ensure the package
 cache is updated so Chef can install packages, or consider putting
-apt-get in your bootstrap process or
-[knife bootstrap template](http://wiki.opscode.com/display/chef/Knife+Bootstrap).
+apt-get in your bootstrap process.
 
 On RHEL, SELinux is enabled by default. The `selinux` cookbook
 contains a `permissive` recipe that can be used to set SELinux to
@@ -59,16 +56,16 @@ contains a `permissive` recipe that can be used to set SELinux to
 by the user to address SELinux permissions.
 
 The easiest but **certainly not ideal way** to deal with IPtables is
-to flush all rules. Opscode does provide an `iptables` cookbook but is
+to flush all rules. You can use `iptables` cookbook but is
 migrating from the approach used there to a more robust solution
 utilizing a general "firewall" LWRP that would have an "iptables"
-provider. Alternately, you can use ufw, with Opscode's `ufw` and
+provider. Alternately, you can use ufw, with `ufw` and
 `firewall` cookbooks to set up rules. See those cookbooks' READMEs for
 documentation.
 
 Build/compile tools may not be installed on the system by default.
 Some recipes (e.g., `apache2::mod_auth_openid`) build the module from
-source. Use Opscode's `build-essential` cookbook to get essential
+source. Use `build-essential` cookbook to get essential
 build packages installed.
 
 On ArchLinux, if you are using the `apache2::mod_auth_openid` recipe,
@@ -84,8 +81,7 @@ ensure that the cookbook is available to the node, and to set up `god`.
 
 ## Platforms:
 
-The following platforms and versions are tested and supported using
-Opscode's [test-kitchen](http://github.com/opscode/test-kitchen).
+The following platforms and versions are tested and supported
 
 * Ubuntu 10.04, 12.04
 * CentOS 5.8, 6.3
@@ -110,7 +106,7 @@ tested manually but are not tested under test-kitchen.
 On Red Hat Enterprise Linux and derivatives, the EPEL repository may
 be necessary to install packages used in certain recipes. The
 `apache2::default` recipe, however, does not require any additional
-repositories. Opscode's `yum` cookbook contains a recipe to add the
+repositories. `yum` cookbook contains a recipe to add the
 EPEL repository. See __Examples__ for more information.
 
 ### Notes for FreeBSD:
@@ -122,18 +118,6 @@ list, or this recipe will fail. We don't set an explicit dependency
 because we feel the `freebsd` cookbook is something users would want
 on their nodes, and due to the generality of this cookbook we don't
 want additional specific dependencies.
-
-Tests
-=====
-
-This cookbook in the
-[source repository](https://github.com/opscode-cookbooks/apache2)
-contains minitest and cucumber tests. This is an initial proof of
-concept that will be fleshed out with more supporting infrastructure
-at a future time.
-
-Please see the CONTRIBUTING file for information on how to add tests
-for your contributions.
 
 Attributes
 ==========
@@ -149,19 +133,19 @@ attributes are determined based on the node's platform. See the
 attributes/default.rb file for default values in the case statement at
 the top of the file.
 
-* `node['apache']['dir']` - Location for the Apache configuration
-* `node['apache']['log_dir']` - Location for Apache logs
-* `node['apache']['error_log']` - Location for the default error log
-* `node['apache']['access_log']` - Location for the default access log
-* `node['apache']['user']` - User Apache runs as
-* `node['apache']['group']` - Group Apache runs as
-* `node['apache']['binary']` - Apache httpd server daemon
-* `node['apache']['icondir']` - Location for icons
-* `node['apache']['cache_dir']` - Location for cached files used by Apache itself or recipes
-* `node['apache']['pid_file']` - Location of the PID file for Apache httpd
-* `node['apache']['lib_dir']` - Location for shared libraries
-* `node['apache']['default_site_enabled']` - Default site enabled. Default is false.
-* `node['apache']['ext_status']` - if true, enables ExtendedStatus for `mod_status`
+* `node['apache2']['dir']` - Location for the Apache configuration
+* `node['apache2']['log_dir']` - Location for Apache logs
+* `node['apache2']['error_log']` - Location for the default error log
+* `node['apache2']['access_log']` - Location for the default access log
+* `node['apache2']['user']` - User Apache runs as
+* `node['apache2']['group']` - Group Apache runs as
+* `node['apache2']['binary']` - Apache httpd server daemon
+* `node['apache2']['icondir']` - Location for icons
+* `node['apache2']['cache_dir']` - Location for cached files used by Apache itself or recipes
+* `node['apache2']['pid_file']` - Location of the PID file for Apache httpd
+* `node['apache2']['lib_dir']` - Location for shared libraries
+* `node['apache2']['default_site_enabled']` - Default site enabled. Default is false.
+* `node['apache2']['ext_status']` - if true, enables ExtendedStatus for `mod_status`
 
 General settings
 ----------------
@@ -169,14 +153,14 @@ General settings
 These are general settings used in recipes and templates. Default
 values are noted.
 
-* `node['apache']['listen_addresses']` - Addresses that httpd should listen on. Default is any ("*").
-* `node['apache']['listen_ports']` - Ports that httpd should listen on. Default is port 80.
-* `node['apache']['contact']` - Value for ServerAdmin directive. Default "ops@example.com".
-* `node['apache']['timeout']` - Value for the Timeout directive. Default is 300.
-* `node['apache']['keepalive']` - Value for the KeepAlive directive. Default is On.
-* `node['apache']['keepaliverequests']` - Value for MaxKeepAliveRequests. Default is 100.
-* `node['apache']['keepalivetimeout']` - Value for the KeepAliveTimeout directive. Default is 5.
-* `node['apache']['default_modules']` - Array of module names. Can take "mod_FOO" or "FOO" as names, where FOO is the apache module, e.g. "`mod_status`" or "`status`".
+* `node['apache2']['listen_addresses']` - Addresses that httpd should listen on. Default is any ("*").
+* `node['apache2']['listen_ports']` - Ports that httpd should listen on. Default is port 80.
+* `node['apache2']['contact']` - Value for ServerAdmin directive. Default "ops@example.com".
+* `node['apache2']['timeout']` - Value for the Timeout directive. Default is 300.
+* `node['apache2']['keepalive']` - Value for the KeepAlive directive. Default is On.
+* `node['apache2']['keepaliverequests']` - Value for MaxKeepAliveRequests. Default is 100.
+* `node['apache2']['keepalivetimeout']` - Value for the KeepAliveTimeout directive. Default is 5.
+* `node['apache2']['default_modules']` - Array of module names. Can take "mod_FOO" or "FOO" as names, where FOO is the apache module, e.g. "`mod_status`" or "`status`".
 
 The modules listed in `default_modules` will be included as recipes in `recipe[apache::default]`.
 
@@ -186,12 +170,12 @@ Prefork attributes
 Prefork attributes are used for tuning the Apache HTTPD prefork MPM
 configuration.
 
-* `node['apache']['prefork']['startservers']` - initial number of server processes to start. Default is 16.
-* `node['apache']['prefork']['minspareservers']` - minimum number of spare server processes. Default 16.
-* `node['apache']['prefork']['maxspareservers']` - maximum number of spare server processes. Default 32.
-* `node['apache']['prefork']['serverlimit']` - upper limit on configurable server processes. Default 400.
-* `node['apache']['prefork']['maxclients']` - Maximum number of simultaneous connections.
-* `node['apache']['prefork']['maxrequestsperchild']` - Maximum number of request a child process will handle. Default 10000.
+* `node['apache2']['prefork']['startservers']` - initial number of server processes to start. Default is 16.
+* `node['apache2']['prefork']['minspareservers']` - minimum number of spare server processes. Default 16.
+* `node['apache2']['prefork']['maxspareservers']` - maximum number of spare server processes. Default 32.
+* `node['apache2']['prefork']['serverlimit']` - upper limit on configurable server processes. Default 400.
+* `node['apache2']['prefork']['maxclients']` - Maximum number of simultaneous connections.
+* `node['apache2']['prefork']['maxrequestsperchild']` - Maximum number of request a child process will handle. Default 10000.
 
 Worker attributes
 -----------------
@@ -199,12 +183,12 @@ Worker attributes
 Worker attributes are used for tuning the Apache HTTPD worker MPM
 configuration.
 
-* `node['apache']['worker']['startservers']` - Initial number of server processes to start. Default 4
-* `node['apache']['worker']['serverlimit']` - upper limit on configurable server processes. Default 16.
-* `node['apache']['worker']['maxclients']` - Maximum number of simultaneous connections. Default 1024.
-* `node['apache']['worker']['minsparethreads']` - Minimum number of spare worker threads. Default 64
-* `node['apache']['worker']['maxsparethreads']` - Maximum number of spare worker threads. Default 192.
-* `node['apache']['worker']['maxrequestsperchild']` - Maximum number of requests a child process will handle.
+* `node['apache2']['worker']['startservers']` - Initial number of server processes to start. Default 4
+* `node['apache2']['worker']['serverlimit']` - upper limit on configurable server processes. Default 16.
+* `node['apache2']['worker']['maxclients']` - Maximum number of simultaneous connections. Default 1024.
+* `node['apache2']['worker']['minsparethreads']` - Minimum number of spare worker threads. Default 64
+* `node['apache2']['worker']['maxsparethreads']` - Maximum number of spare worker threads. Default 192.
+* `node['apache2']['worker']['maxrequestsperchild']` - Maximum number of requests a child process will handle.
 
 mod\_auth\_openid attributes
 ----------------------------
@@ -214,21 +198,19 @@ file. Like all Chef attributes files, they are loaded as well, but
 they're logistically unrelated to the others, being specific to the
 `mod_auth_openid` recipe.
 
-* `node['apache']['mod_auth_openid']['checksum']` - sha256sum of the tarball containing the source.
-* `node['apache']['mod_auth_openid']['ref']` - Any sha, tag, or branch found from https://github.com/bmuller/mod_auth_openid
-* `node['apache']['mod_auth_openid']['cache_dir']` - the cache directory is where the sqlite3 database is stored. It is separate so it can be managed as a directory resource.
-* `node['apache']['mod_auth_openid']['dblocation']` - filename of the sqlite3 database used for directive `AuthOpenIDDBLocation`, stored in the `cache_dir` by default.
-* `node['apache']['mod_auth_openid']['configure_flags']` - optional array of configure flags passed to the `./configure` step in the compilation of the module.
+* `node['apache2']['mod_auth_openid']['checksum']` - sha256sum of the tarball containing the source.
+* `node['apache2']['mod_auth_openid']['ref']` - Any sha, tag, or branch found from https://github.com/bmuller/mod_auth_openid
+* `node['apache2']['mod_auth_openid']['cache_dir']` - the cache directory is where the sqlite3 database is stored. It is separate so it can be managed as a directory resource.
+* `node['apache2']['mod_auth_openid']['dblocation']` - filename of the sqlite3 database used for directive `AuthOpenIDDBLocation`, stored in the `cache_dir` by default.
+* `node['apache2']['mod_auth_openid']['configure_flags']` - optional array of configure flags passed to the `./configure` step in the compilation of the module.
 
 mod\_ssl attributes
 -------------------
 
-* `node['apache']['mod_ssl']['cipher_suite']` - sets the
+* `node['apache2']['mod_ssl']['cipher_suite']` - sets the
   SSLCiphersuite value to the specified string. The default is
   considered "sane" but you may need to change it for your local
-  security policy, e.g. if you have PCI-DSS requirements. Additional
-  commentary on the
-  [original pull request](https://github.com/opscode-cookbooks/apache2/pull/15#commitcomment-1605406).
+  security policy
 
 Recipes
 =======
@@ -258,7 +240,7 @@ default
 
 The default recipe does a number of things to set up Apache HTTPd. It
 also includes a number of modules based on the attribute
-`node['apache']['default_modules']` as recipes.
+`node['apache2']['default_modules']` as recipes.
 
 logrotate
 ---------
@@ -272,10 +254,10 @@ mod\_auth\_cas
 
 This recipe installs the proper package and enables the `auth_cas`
 module. It can install from source or package. Package is the default,
-set the attribute `node['apache']['mod_auth_cas']['from_source']` to
+set the attribute `node['apache2']['mod_auth_cas']['from_source']` to
 true to enable source installation. Modify the version to install by
 changing the attribute
-`node['apache']['mod_auth_cas']['source_revision']`. It is a version
+`node['apache2']['mod_auth_cas']['source_revision']`. It is a version
 tag by default, but could be master, or another tag, or branch.
 
 The module configuration is written out with the `CASCookiePath` set,
@@ -299,11 +281,11 @@ like the GNU C++ compiler and development headers.
 
 To use the module in your own cookbooks to authenticate systems using
 OpenIDs, specify an array of OpenIDs that are allowed to authenticate
-with the attribute `node['apache']['allowed_openids']`. Use the
+with the attribute `node['apache2']['allowed_openids']`. Use the
 following in a vhost to protect with OpenID authentication:
 
-    AuthType OpenID require user <%= node['apache']['allowed_openids'].join(' ') %>
-    AuthOpenIDDBLocation <%= node['apache']['mod_auth_openid']['dblocation'] %>
+    AuthType OpenID require user <%= node['apache2']['allowed_openids'].join(' ') %>
+    AuthOpenIDDBLocation <%= node['apache2']['mod_auth_openid']['dblocation'] %>
 
 Change the DBLocation with the attribute as required; this file is in
 a different location than previous versions, see below. It should be a
@@ -353,14 +335,14 @@ mod\_ssl
 --------
 
 Besides installing and enabling `mod_ssl`, this recipe will append
-port 443 to the `node['apache']['listen_ports']` attribute array and
+port 443 to the `node['apache2']['listen_ports']` attribute array and
 update the ports.conf.
 
 god\_monitor
 ------------
 
 Sets up a `god` monitor for Apache. External requirements are the
-`god` and `runit` cookbooks from Opscode. When using this recipe,
+`god` and `runit` cookbooks. When using this recipe,
 include `recipe[god]` in the node's expanded run list to ensure the
 client downloads it; `god` depends on runit so that will also be
 downloaded.
@@ -386,7 +368,7 @@ directly.
 
 This will use a template resource to write the module's configuration
 file in the `mods-available` under the Apache configuration directory
-(`node['apache']['dir']`). This is a platform-dependent location. See
+(`node['apache2']['dir']`). This is a platform-dependent location. See
 __apache\_module__.
 
 ### Parameters:
@@ -396,7 +378,7 @@ __apache\_module__.
 
 ### Examples:
 
-Create `#{node['apache']['dir']}/mods-available/alias.conf`.
+Create `#{node['apache2']['dir']}/mods-available/alias.conf`.
 
     apache_conf "alias"
 
@@ -404,9 +386,9 @@ apache\_module
 --------------
 
 Enable or disable an Apache module in
-`#{node['apache']['dir']}/mods-available` by calling `a2enmod` or
+`#{node['apache2']['dir']}/mods-available` by calling `a2enmod` or
 `a2dismod` to manage the symbolic link in
-`#{node['apache']['dir']}/mods-enabled`. If the module has a
+`#{node['apache2']['dir']}/mods-enabled`. If the module has a
 configuration file, a template should be created in the cookbook where
 the definition is used. See __Examples__.
 
@@ -443,9 +425,9 @@ apache\_site
 ------------
 
 Enable or disable a VirtualHost in
-`#{node['apache']['dir']}/sites-available` by calling a2ensite or
+`#{node['apache2']['dir']}/sites-available` by calling a2ensite or
 a2dissite to manage the symbolic link in
-`#{node['apache']['dir']}/sites-enabled`.
+`#{node['apache2']['dir']}/sites-enabled`.
 
 The template for the site must be managed as a separate resource. To
 combine the template with enabling a site, see `web_app`.
@@ -480,7 +462,7 @@ parameter.
 Current parameters used by the definition:
 
 * `name` - The name of the site. The template will be written to
-  `#{node['apache']['dir']}/sites-available/#{params['name']}.conf`
+  `#{node['apache2']['dir']}/sites-available/#{params['name']}.conf`
 * `cookbook` - Optional. Cookbook where the source template is. If
   this is not defined, Chef will use the named template in the
   cookbook where the definition is used.
@@ -540,7 +522,7 @@ create a basic role for web servers that provide both HTTP and HTTPS:
       "recipe[apache2::mod_ssl]"
     )
     default_attributes(
-      "apache" => {
+      "apache2" => {
         "listen_ports" => ["80", "443"]
       }
     )
@@ -548,9 +530,10 @@ create a basic role for web servers that provide both HTTP and HTTPS:
 For examples of using the definitions in your own recipes, see their
 respective sections above.
 
-License 
-========
-* Copyright:: 2015,Cloudenablers
+License and Authors
+===================
+
+* Author:: NagaLakshmi <nagalakshmi.n@cusdelight.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

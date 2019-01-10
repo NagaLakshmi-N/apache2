@@ -2,9 +2,7 @@
 # Cookbook Name:: apache2
 # Recipe:: apreq2
 #
-# modified from the python recipe by Jeremy Bingham
-#
-# Copyright 2015, Cloudenablers
+# modified from the python recipe
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

@@ -2,8 +2,6 @@
 # Cookbook Name:: apache2
 # Recipe:: default
 #
-# Copyright 2015, Cloudenablers
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -167,16 +165,6 @@ template 'apache2.conf' do
   notifies :restart, 'service[apache2]'
 end
 
-if node['platform'] == "centos"
-  template "#{node['apache2']['docroot_dir']}/index.html" do
-    source "index.html.erb"
-    owner    'root'
-	group    node['apache2']['root_group']
-	mode     '0644'
-	notifies :restart, 'service[apache2]'
-  end
-end
-
 template 'apache2-conf-security' do
   path     "#{node['apache2']['dir']}/conf.d/security.conf"
   source   'security.erb'
@@ -223,7 +211,7 @@ apache_site 'default' do
 end
 
 #GCM-2363,GCM-2784 - Apache fail to start in CentOS 7.x and Fedora >= 18 due to missing mime.types
-if ((node['platform'] == 'centos' || node['platform'] == 'redhat') && node['platform_version'].to_f >= 7.0) ||
+if ((node['platform'] == 'centos' || node['platform'] == 'rhel') && node['platform_version'].to_f >= 7.0) ||
   (node['platform'] == 'fedora' && node['platform_version'].to_f >=18.0)
   file "#{node['apache2']['dir'] }/conf/mime.types" do
     owner 'root'
@@ -236,7 +224,7 @@ if ((node['platform'] == 'centos' || node['platform'] == 'redhat') && node['plat
   end
 end
 
-if ((node['platform'] == 'centos' || node['platform'] == 'redhat') && node['platform_version'].to_f >= 7.0) || (node['platform'] == 'fedora' && node['platform_version'].to_f >= 18)
+if ((node['platform'] == 'centos' || node['platform'] == 'rhel') && node['platform_version'].to_f >= 7.0) || (node['platform'] == 'fedora' && node['platform_version'].to_f >= 18)
   bash "Configure iptables" do
     code <<-EOH
     systemctl mask firewalld
@@ -248,7 +236,7 @@ if ((node['platform'] == 'centos' || node['platform'] == 'redhat') && node['plat
   end
 end
 
-if node['platform'] == 'centos' || node['platform'] == 'redhat' || node['platform'] == 'fedora'
+if node['platform'] == 'centos' || node['platform'] == 'rhel' || node['platform'] == 'fedora'
   node['apache2']['listen_ports'].each do |port|
     execute "Enable http port in iptables" do
 	  command "iptables -I INPUT 1 -p tcp --dport #{port} -j ACCEPT"

@@ -154,7 +154,7 @@ LogLevel warn
 Include <%= node['apache2']['dir'] %>/mods-enabled/*.load
 Include <%= node['apache2']['dir'] %>/mods-enabled/*.conf
 <% elsif node['apache2']['version'] == '2.4' -%>
-<% if ((node['platform'] == 'centos' || node['platform'] == 'redhat') && node['platform_version'].to_f >= 7.0) || (node['platform'] == 'fedora' && node['platform_version'].to_f >= 18.0)-%>
+<% if (node['platform'] == 'centos' && node['platform_version'].to_f >= 7.0) || (node['platform'] == 'fedora' && node['platform_version'].to_f >= 18.0)-%>
 Include conf.modules.d/*.conf
 <% else -%>
 IncludeOptional <%= node['apache2']['dir'] %>/mods-enabled/*.load
@@ -273,7 +273,7 @@ LogFormat "%{User-agent}i" agent
 # ErrorDocument 506 /error/HTTP_VARIANT_ALSO_VARIES.html.var
 <% end -%>
 <% if node['apache2']['version'] == '2.4' -%> 
-<% if node['platform'] == 'centos' || node['platform'] == 'redhat' || node['platform'] == 'fedora' -%>
+<% if node['platform'] == 'centos' || node['platform'] == 'fedora' -%>
 # Include generic snippets of statements
 IncludeOptional <%= node['apache2']['dir'] %>/conf.d/*.conf
 # Include the virtual host configurations:
