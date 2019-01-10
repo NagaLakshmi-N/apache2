@@ -2,6 +2,8 @@
 # Cookbook Name:: apache2
 # Recipe:: php5
 #
+# Copyright 2015, Cloudenablers
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,7 +19,7 @@
 
 case node['platform_family']
 when 'debian'
-  package 'libapache2-mod-php5'
+  package 'libapache2-mod-php'
 when 'arch'
   package 'php-apache' do
     notifies :run, 'execute[generate-module-list]', :immediately
@@ -41,13 +43,13 @@ when 'fedora'
     not_if 'which php'
   end
 when 'freebsd'
-  freebsd_port_options 'php5' do
+  freebsd_port_options 'php' do
     options 'APACHE' => true
     action :create
   end
 
   package 'php package' do
-    package_name 'php5'
+    package_name 'php'
     source 'ports'
     notifies :run, 'execute[generate-module-list]', :immediately
   end
@@ -58,10 +60,10 @@ file "#{node['apache2']['dir']}/conf.d/php.conf" do
   backup false
 end
 
-apache_module 'php5' do
+apache_module 'php' do
   case node['platform_family']
   when 'rhel', 'fedora', 'freebsd'
     conf true
-    filename 'libphp5.so'
+    filename 'libphp.so'
   end
 end
